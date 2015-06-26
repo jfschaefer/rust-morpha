@@ -41,7 +41,8 @@ pub fn full_stem(input: &str) -> String {
 
 #[test]
 fn small_test() {
-    assert!(stem("tilings") == "tiling");
-    assert!(full_stem("tilings") == "tile");
+    assert_eq!(stem("tilings"), "tiling");
+    assert_eq!(full_stem("tilings"), "tile");
+    assert_eq!(full_stem("There are many words"), "there be many word");
     close();
 }

@@ -1,0 +1,11 @@
+[package]
+name = "rustmorpha"
+version = "0.1.0"
+authors = ["jfschaefer <j.schaefer@jacobs-university.de>"]
+build = "build.rs"
+
+[dependencies]
+libc = "~0.1"
+
+[lib]
+name = "rustmorpha"

@@ -1,5 +1,6 @@
 #define interactive   /*required for morpha to work properly*/
 #include <ctype.h>
+#include <stdio.h>
 
 //used as an interface to morpha:
 //(I've redirected the reading and writing from stdin/stdout to these streams)
@@ -11,7 +12,6 @@ char *morpha_outstream_buff_ptr;
 #include "morpha_interface.h"
 
 #include "../morpha/morpha.yy.c"
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -117,11 +117,11 @@ char * m_stem(const char *sentence) {
   yyout = morpha_outstream;
   yyin = morpha_instream;
 
-  sentence = word_replace(sentence, "'s", "'S");   //otherwise the s gets removed
+  //sentence = word_replace(sentence, "'s", "'S");   //otherwise the s gets removed
 
   fprintf(morpha_instream, "%s", sentence);
 
-  free(sentence);
+  //free(sentence);
 
   int c;
   while ((c = getc(morpha_instream)) != EOF) {
@@ -135,12 +135,13 @@ char * m_stem(const char *sentence) {
 
   fclose(morpha_outstream);
   //stemmed = morpha_outstream_buff_ptr;
-  stemmed = word_replace(morpha_outstream_buff_ptr, "formulum", "formula");
+  //stemmed = word_replace(morpha_outstream_buff_ptr, "formulum", "formula");
 
-  free(morpha_outstream_buff_ptr);
-  tmp = word_replace(stemmed, "vium", "via");
-  free(stemmed);
-  stemmed = tmp;
+  //free(morpha_outstream_buff_ptr);
+  //tmp = word_replace(stemmed, "vium", "via");
+  //free(stemmed);
+  //stemmed = tmp;
+  stemmed = morpha_outstream_buff_ptr;
 
   //size_t outsize;
   //morpha_outstream = open_memstream(&morpha_outstream_buff_ptr, &outsize);

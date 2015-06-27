@@ -5,16 +5,9 @@
     @file
 */
 
-#ifndef NORMALIZER_H_INCLUDED
-#define NORMALIZER_H_INCLUDED
+#ifndef MORPHA_H_INCLUDED_
+#define MORPHA_H_INCLUDED_
 #include <stdio.h>
-
-//used as an interface to morpha:
-//(I've redirected the reading and writing from stdin/stdout to these streams)
-FILE *morpha_instream;
-FILE *morpha_outstream;
-char *morpha_instream_buff_ptr;
-char *morpha_outstream_buff_ptr;
 
 /*! Initializes the stemmer */
 void m_init();

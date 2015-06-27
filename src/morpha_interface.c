@@ -1,6 +1,15 @@
 #define interactive   /*required for morpha to work properly*/
 #include <ctype.h>
+
+//used as an interface to morpha:
+//(I've redirected the reading and writing from stdin/stdout to these streams)
+FILE *morpha_instream;
+FILE *morpha_outstream;
+char *morpha_instream_buff_ptr;
+char *morpha_outstream_buff_ptr;
+
 #include "morpha_interface.h"
+
 #include "../morpha/morpha.yy.c"
 #include <stdio.h>
 #include <string.h>
@@ -98,8 +107,7 @@ char *word_replace(char *orig, char *rep, char *with) {
 }
 
 char * m_stem(const char *sentence) {
-  char *x0;
-  char **stemmed = &x0;
+  char *stemmed;
   if (!STEMMER_IS_INITIALIZED) m_init();
   char *tmp;
   size_t insize, outsize;   //we're not interested in the size
@@ -126,36 +134,35 @@ char * m_stem(const char *sentence) {
   yylex();
 
   fclose(morpha_outstream);
-  //*stemmed = morpha_outstream_buff_ptr;
-  *stemmed = word_replace(morpha_outstream_buff_ptr, "formulum", "formula");
+  //stemmed = morpha_outstream_buff_ptr;
+  stemmed = word_replace(morpha_outstream_buff_ptr, "formulum", "formula");
 
   free(morpha_outstream_buff_ptr);
-  tmp = word_replace(*stemmed, "vium", "via");
-  free(*stemmed);
-  *stemmed = tmp;
+  tmp = word_replace(stemmed, "vium", "via");
+  free(stemmed);
+  stemmed = tmp;
 
   //size_t outsize;
   //morpha_outstream = open_memstream(&morpha_outstream_buff_ptr, &outsize);
   fclose(morpha_instream);
   free(morpha_instream_buff_ptr);
-  return *stemmed;
+  return stemmed;
 }
 
 char * m_full_stem(const char *input) {
-  char *x0;
-  char **stemmed = &x0;
-  *stemmed = m_stem(input);
-  if (strcmp(input, *stemmed)) {
-    input = *stemmed;
-    *stemmed = m_stem(input);
-    while (strcmp(input, *stemmed)) {
+  char *stemmed;
+  stemmed = m_stem(input);
+  if (strcmp(input, stemmed)) {
+    input = stemmed;
+    stemmed = m_stem(input);
+    while (strcmp(input, stemmed)) {
       free(input);
-      input = *stemmed;
-      *stemmed = m_stem(input);
+      input = stemmed;
+      stemmed = m_stem(input);
     }
     free(input);
   }
-  return *stemmed;
+  return stemmed;
 }
 
 void m_close() {

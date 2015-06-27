@@ -26,8 +26,10 @@ pub fn close() {
 pub fn stem(input: &str) -> String {
     let c_input = CString::new(input).unwrap().as_ptr();
     let c_output = unsafe {m_stem(c_input)};
-    str::from_utf8(unsafe { CStr::from_ptr(c_output) }.to_bytes())
-        .unwrap().to_owned()
+    let result = str::from_utf8(unsafe { CStr::from_ptr(c_output) }.to_bytes())
+        .unwrap().to_owned();
+    unsafe { libc::free(c_output as *mut libc::c_void) };
+    result
 }
 
 ///Stem as many times as something changes
@@ -35,8 +37,10 @@ pub fn stem(input: &str) -> String {
 pub fn full_stem(input: &str) -> String {
     let c_input = CString::new(input).unwrap().as_ptr();
     let c_output = unsafe {m_full_stem(c_input)};
-    str::from_utf8(unsafe {CStr::from_ptr(c_output) }.to_bytes())
-        .unwrap().to_owned()
+    let result = str::from_utf8(unsafe { CStr::from_ptr(c_output) }.to_bytes())
+        .unwrap().to_owned();
+    unsafe { libc::free(c_output as *mut libc::c_void) };
+    result
 }
 
 #[test]
